@@ -1,0 +1,15 @@
+h1 {
+  margin-bottom: 4rem;
+}
+
+.btn {
+  background-color: blue;
+  border: 1px solid white;
+  color: white;
+}
+
+.btn:hover {
+  color: blue;
+  border: 1px solid blue;
+  background-color: white;
+}
