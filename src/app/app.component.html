@@ -1,6 +1,7 @@
 <nav>
   <h1>Pencil App</h1>
-  <a (click)="logout()" *ngIf="authService.user | async">Logout</a>
+  <a (click)="logout()" *ngIf="authService.user">Logout</a>
+  <a routerLink="/">Dashboard</a>
 </nav>
 
 <router-outlet></router-outlet>

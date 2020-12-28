@@ -1,7 +1,7 @@
 <div class="container">
   <h1>Dashboard</h1>
   <h2>Take Notes</h2>
-  <div class="editable" (keyup)="log($event)"></div>
+  <div class="editable" (keyup)="updateNote($event)"></div>
   <button class="btn" (click)="submit()">Submit</button>
-  <p>{{ value }}</p>
+  <p>{{ note }}</p>
 </div>

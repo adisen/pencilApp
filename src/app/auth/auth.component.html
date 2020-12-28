@@ -1,13 +1,9 @@
 <div class="container">
-  <h1 *ngIf="authService.user | async">
-    Welcome {{ (authService.user | async)?.email }}!
-  </h1>
+  <h1 *ngIf="authService.user">Welcome {{ authService.user.displayName }}!</h1>
 
-  <h1 *ngIf="!(authService.user | async)">
-    Welcome User, Please Login to Continue!
-  </h1>
+  <h1 *ngIf="!authService.user">Welcome User, Please Login to Continue!</h1>
 
-  <a (click)="login()" *ngIf="!(authService.user | async)" class="btn">
+  <a (click)="login()" *ngIf="!authService.user" class="btn">
     Login With Google
   </a>
 </div>

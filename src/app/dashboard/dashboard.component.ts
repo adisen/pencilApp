@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import * as MediumEditor from 'medium-editor';
+import {
+  AngularFireDatabase,
+  AngularFireList,
+  AngularFireObject,
+} from '@angular/fire/database';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AuthService } from '../auth.service';
+import { Note } from '../../models/note.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,11 +16,20 @@ import * as MediumEditor from 'medium-editor';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  value = '';
-  constructor() {}
+  note: any = '';
+  uid: any = '';
+
+  noteRef: any;
+  editor: any;
+
+  constructor(
+    private authService: AuthService,
+    private db: AngularFireDatabase,
+    private firestore: AngularFirestore
+  ) {}
 
   ngOnInit(): void {
-    let editor = new MediumEditor('.editable', {
+    this.editor = new MediumEditor('.editable', {
       toolbar: {
         /* These are the default options for the toolbar,
            if nothing is passed this is what is used */
@@ -35,14 +53,45 @@ export class DashboardComponent implements OnInit {
         hideOnClick: true,
       },
     });
+    this.uid = this.authService.user?.uid;
+    this.fetchNote(this.uid);
+  }
+
+  createNote(data: Note) {
+    this.firestore.collection('notes').doc(this.uid).set(data);
+    // this.fetchNote(data.userId);
+  }
+
+  fetchNote(uid: string) {
+    this.firestore
+      .collection('notes')
+      .doc(uid)
+      .get()
+      .subscribe((doc) => {
+        if (doc.exists) {
+          console.log(doc.data());
+          this.noteRef = doc.data();
+          this.editor.setContent(this.noteRef.note);
+        }
+      });
   }
 
   submit() {
-    console.log('Submitted', this.value);
+    // this.createNote({ userId: this.uid, note: this.note });
   }
 
-  log(event) {
-    this.value = event.target.innerHTML;
-    console.log(event.target.innerHTML);
+  updateNote(event: any) {
+    this.note = event.target.innerHTML;
+    if (this.noteRef) {
+      // Update with value
+      this.firestore.collection('notes').doc(this.uid).update({
+        note: this.note,
+      });
+
+      // this.fetchNote(this.uid);
+    } else {
+      // Create New Note
+      this.createNote({ userId: this.uid, note: this.note });
+    }
   }
 }

@@ -7,25 +7,25 @@ import firebase from 'firebase/app';
   providedIn: 'root',
 })
 export class AuthService {
-  user: Observable<firebase.User | null>;
+  user: firebase.User | null = null;
 
   constructor(private firebaseAuth: AngularFireAuth) {
-    this.user = firebaseAuth.authState;
+    firebaseAuth.authState.subscribe((auth) => {
+      this.user = auth;
+    });
   }
 
   login() {
-    this.firebaseAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    this.firebaseAuth.signInWithRedirect(
+      new firebase.auth.GoogleAuthProvider()
+    );
   }
 
   logout() {
     this.firebaseAuth.signOut();
   }
 
-  isLoggedIn() {
-    if (this.user) {
-      return true;
-    } else {
-      return false;
-    }
+  isAuthenticated(): boolean {
+    return this.user !== null;
   }
 }
