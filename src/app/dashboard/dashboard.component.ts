@@ -6,7 +6,7 @@ import {
   AngularFireObject,
 } from '@angular/fire/database';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
 import { Note } from '../../models/note.model';
 import { Observable } from 'rxjs';
 
@@ -53,13 +53,12 @@ export class DashboardComponent implements OnInit {
         hideOnClick: true,
       },
     });
-    this.uid = this.authService.user?.uid;
+    this.uid = JSON.parse(localStorage.getItem('user')).uid;
     this.fetchNote(this.uid);
   }
 
   createNote(data: Note) {
     this.firestore.collection('notes').doc(this.uid).set(data);
-    // this.fetchNote(data.userId);
   }
 
   fetchNote(uid: string) {
@@ -76,10 +75,6 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  submit() {
-    // this.createNote({ userId: this.uid, note: this.note });
-  }
-
   updateNote(event: any) {
     this.note = event.target.innerHTML;
     if (this.noteRef) {
@@ -87,8 +82,6 @@ export class DashboardComponent implements OnInit {
       this.firestore.collection('notes').doc(this.uid).update({
         note: this.note,
       });
-
-      // this.fetchNote(this.uid);
     } else {
       // Create New Note
       this.createNote({ userId: this.uid, note: this.note });

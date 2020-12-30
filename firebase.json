@@ -1,0 +1,13 @@
+{
+  "hosting": {
+    "site": "pencilapp-5a04f",
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
